@@ -5,3 +5,5 @@
 希望你能享受它！
 
 所有发行版都在我的：[itch](https://xphost.itch.io/judgment-of-ash) 上！欢迎下载~
+
+许可证：MIT

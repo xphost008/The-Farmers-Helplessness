@@ -1,16 +1,30 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
-    <link rel="stylesheet" href="styles.css" />
-    <title>Judgment of Ash</title>
-  </head>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+        <link rel="stylesheet" href="styles.css" />
+        <title>Judgment of Ash</title>
+    </head>
 
-  <body>
-    <main id="main">
-        <div id="main_box"></div>
-    </main>
-    <script src="./main.js" defer></script>
-  </body>
+    <body>
+        <main id="main">
+            <div id="main_box"></div>
+        </main>
+        <script>
+            // document.addEventListener("contextmenu", (e) => {
+            //     e.preventDefault();
+            //     e.stopPropagation();
+            // })
+            document.addEventListener("dblclick", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            })
+            document.addEventListener("drag", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            })
+        </script>
+        <script src="./main.js" defer></script>
+    </body>
 </html>
