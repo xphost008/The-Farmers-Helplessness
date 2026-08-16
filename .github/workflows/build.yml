@@ -48,7 +48,7 @@ jobs:
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: 1.84.1
+          toolchain: stable
           targets: ${{ matrix.target }}
       - name: Install haxe toolchain
         uses: krdlab/setup-haxe@v2
@@ -120,7 +120,7 @@ jobs:
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: 1.84.1
+          toolchain: stable
           targets: ${{ matrix.target }}
       - name: Install Java toolchain
         uses: actions/setup-java@v3
