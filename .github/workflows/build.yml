@@ -56,8 +56,8 @@ jobs:
           haxe-version: latest
       - name: Install haxe dependencies
         run: |
-          mkdir ~/haxelib
-          haxelib setup ~/haxelib
+          mkdir ~/haxelibpackage
+          haxelib setup ~/haxelibpackage
           haxelib install jsasync
       - name: Install Linux dependencies
         if: ${{ matrix.platform == 'linux' }}
@@ -137,8 +137,8 @@ jobs:
           haxe-version: latest
       - name: Install haxe dependencies
         run: |
-          mkdir ~/haxelib
-          haxelib setup ~/haxelib
+          mkdir ~/haxelibpackage
+          haxelib setup ~/haxelibpackage
           haxelib install jsasync
       - name: Install Rustup Android toolchain
         run: |
@@ -201,8 +201,8 @@ jobs:
           haxe-version: latest
       - name: Install haxe dependencies
         run: |
-          mkdir ~/haxelib
-          haxelib setup ~/haxelib
+          mkdir ~/haxelibpackage
+          haxelib setup ~/haxelibpackage
           haxelib install jsasync
       - name: Add iOS targets to Rust
         run: rustup target add ${{ matrix.target }}
