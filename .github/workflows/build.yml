@@ -72,6 +72,7 @@ jobs:
         run: |
           npm install
           npm run tauri icon
+          npm run haxe
       - name: Build the app
         run: npm run tauri build -- --target ${{ matrix.target }}
       - name: Upload artifact Windows
@@ -153,6 +154,7 @@ jobs:
           ANDROID_NDK_HOME: /usr/local/lib/android/sdk/ndk/29.0.14206865
         run: |
           npm run tauri android init
+          npm run haxe
           # 生成签名（需要调用我的秘密密钥）
           keytool -genkey -v -keystore ~/upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload -storepass ${{ secrets.MY_ANDROID_KEYTOOL_PASSWORD }} -dname "CN=xphost, OU=CandySharkStudio, O=CandySharkStudio, L=BeiJing, ST=BeiJing, C=CN"
           # 生成配置（需要调用我的秘密密钥）
@@ -188,7 +190,7 @@ jobs:
             platform: ios
             arch: aarch64
     runs-on: ${{ matrix.os }}
-    if: false
+    # if: false
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -216,6 +218,7 @@ jobs:
           npm install
           npm run tauri ios init
           npm run tauri icon
+          npm run haxe
       - name: Setup Fake Xcodebuild Wrapper
         run: |
           mkdir -p /tmp/tauri_wrapper
@@ -295,7 +298,7 @@ jobs:
           sed --help
       - name: Start Build
         run: |
-          npm run only-gen
+          npm run haxe
           rm -rf src/src
           rm -r src/build.hxml
       - name: Setup Pages
