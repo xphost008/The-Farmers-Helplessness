@@ -282,8 +282,8 @@ jobs:
           haxe-version: latest
       - name: Install haxe dependencies
         run: |
-          mkdir ~/haxelib
-          haxelib setup ~/haxelib
+          mkdir ~/haxelibpackage
+          haxelib setup ~/haxelibpackage
           haxelib install jsasync
       - name: Remove tauri code
         run: |
