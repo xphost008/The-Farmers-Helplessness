@@ -56,6 +56,8 @@ jobs:
           haxe-version: latest
       - name: Install haxe dependencies
         run: |
+          mkdir ~/haxelib
+          haxelib setup ~/haxelib
           haxelib install jsasync
       - name: Install Linux dependencies
         if: ${{ matrix.platform == 'linux' }}
@@ -77,14 +79,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Bundle-${{matrix.platform}}-${{matrix.arch}}
-          path: "src-tauri/target/${{ matrix.target }}/release/spaceport.exe"
+          path: "src-tauri/target/${{ matrix.target }}/release/judgment-of-ash.exe"
           if-no-files-found: error
       - name: Upload artifact linux
         if: ${{matrix.platform == 'linux' || matrix.platform == 'freebsd'}}
         uses: actions/upload-artifact@v4
         with:
           name: Bundle-${{matrix.platform}}-${{matrix.arch}}
-          path: "src-tauri/target/${{ matrix.target }}/release/spaceport"
+          path: "src-tauri/target/${{ matrix.target }}/release/judgment-of-ash"
           if-no-files-found: error
       - name: Upload artifact macOS
         if: ${{matrix.platform == 'macos'}}
@@ -108,7 +110,7 @@ jobs:
             target: x86_64-linux-android
             platform: android
             arch: x86_64
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Setup node
@@ -135,6 +137,8 @@ jobs:
           haxe-version: latest
       - name: Install haxe dependencies
         run: |
+          mkdir ~/haxelib
+          haxelib setup ~/haxelib
           haxelib install jsasync
       - name: Install Rustup Android toolchain
         run: |
@@ -171,7 +175,15 @@ jobs:
   build-ios:
     permissions:
       contents: write
-    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            target: aarch64-apple-ios
+            platform: ios
+            arch: aarch64
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -189,9 +201,11 @@ jobs:
           haxe-version: latest
       - name: Install haxe dependencies
         run: |
+          mkdir ~/haxelib
+          haxelib setup ~/haxelib
           haxelib install jsasync
       - name: Add iOS targets to Rust
-        run: rustup target add aarch64-apple-ios
+        run: rustup target add ${{ matrix.target }}
       - name: Tauri iOS init
         run: |
           npm install
@@ -202,7 +216,7 @@ jobs:
           mkdir -p /tmp/tauri_wrapper
           cat << EOF > /tmp/tauri_wrapper/xcodebuild
           #!/bin/bash
-          PROJ_FILE="$REPO_DIR/src-tauri/gen/apple/ren-rs.xcodeproj/project.pbxproj"
+          PROJ_FILE="$REPO_DIR/src-tauri/gen/apple/judgment-of-ash.xcodeproj/project.pbxproj"
           if [ -f "\$PROJ_FILE" ]; then
             sed -i '' 's/DEVELOPMENT_TEAM = ".*";/DEVELOPMENT_TEAM = "";/g' "\$PROJ_FILE"
             sed -i '' '/CODE_SIGN_IDENTITY/d' "\$PROJ_FILE"
@@ -241,12 +255,12 @@ jobs:
           echo "Found archive at: $ARCHIVE_PATH"
           mkdir -p Payload
           cp -R "$ARCHIVE_PATH/Products/Applications/"*.app Payload/
-          zip -r MyApp.unsigned.ipa Payload
+          zip -r Bundle.unsigned.ipa Payload
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ios-unsigned-ipa
-          path: MyApp.unsigned.ipa
+          name: Bundle-${{matrix.platform}}-${{matrix.arch}}
+          path: Bundle.unsigned.ipa
   build-web:
     permissions:
       contents: write
@@ -268,6 +282,8 @@ jobs:
           haxe-version: latest
       - name: Install haxe dependencies
         run: |
+          mkdir ~/haxelib
+          haxelib setup ~/haxelib
           haxelib install jsasync
       - name: Remove tauri code
         run: |
