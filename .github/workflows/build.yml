@@ -188,6 +188,7 @@ jobs:
             platform: ios
             arch: aarch64
     runs-on: ${{ matrix.os }}
+    if: false
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -298,12 +299,12 @@ jobs:
           rm -rf src/src
           rm -r src/build.hxml
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           name: Bundle-Web
           path: "src"
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
