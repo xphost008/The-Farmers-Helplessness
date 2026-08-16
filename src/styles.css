@@ -1,0 +1,35 @@
+body {
+    padding: 0;
+    margin: 0;
+    background-color: black;
+}
+
+@font-face {
+    font-family: SHSSC;
+    src: url(assets/font/SourceHanSansSC-Bold.otf);
+}
+* {
+    font-family: SHSSC;
+    font-size: 1.5cqi;
+    user-select: none;
+}
+#main {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+}
+#main_box {
+    position: fixed;
+    max-width: 100%;
+    max-height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    container-type: size;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+}

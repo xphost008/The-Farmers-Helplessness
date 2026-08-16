@@ -1,0 +1,288 @@
+name: Build App
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build-desktop:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            platform: windows
+            arch: x86_64
+          - os: windows-11-arm
+            target: aarch64-pc-windows-msvc
+            platform: windows
+            arch: aarch64
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            platform: macos
+            arch: aarch64
+          - os: macos-15-intel
+            target: x86_64-apple-darwin
+            platform: macos
+            arch: x86_64
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            platform: linux
+            arch: x86_64
+          - os: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+            platform: linux
+            arch: aarch64
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.84.1
+          targets: ${{ matrix.target }}
+      - name: Install haxe toolchain
+        uses: krdlab/setup-haxe@v2
+        with:
+          haxe-version: latest
+      - name: Install haxe dependencies
+        run: |
+          haxelib install jsasync
+      - name: Install Linux dependencies
+        if: ${{ matrix.platform == 'linux' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+          # Additional dependencies for ARM64 building
+          sudo apt-get install -y xdg-utils
+          # Additional dependencies for RPM building
+          sudo apt-get install -y rpm
+      - name: install frontend dependencies
+        run: |
+          npm install
+          npm run tauri icon
+      - name: Build the app
+        run: npm run tauri build -- --target ${{ matrix.target }}
+      - name: Upload artifact Windows
+        if: ${{matrix.platform == 'windows'}}
+        uses: actions/upload-artifact@v4
+        with:
+          name: Bundle-${{matrix.platform}}-${{matrix.arch}}
+          path: "src-tauri/target/${{ matrix.target }}/release/spaceport.exe"
+          if-no-files-found: error
+      - name: Upload artifact linux
+        if: ${{matrix.platform == 'linux' || matrix.platform == 'freebsd'}}
+        uses: actions/upload-artifact@v4
+        with:
+          name: Bundle-${{matrix.platform}}-${{matrix.arch}}
+          path: "src-tauri/target/${{ matrix.target }}/release/spaceport"
+          if-no-files-found: error
+      - name: Upload artifact macOS
+        if: ${{matrix.platform == 'macos'}}
+        uses: actions/upload-artifact@v4
+        with:
+          name: Bundle-${{matrix.platform}}-${{matrix.arch}}
+          path: "src-tauri/target/${{ matrix.target }}/release/bundle/macos"
+          if-no-files-found: error
+  build-android:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: aarch64-linux-android
+            platform: android
+            arch: aarch64
+          - os: ubuntu-latest
+            target: x86_64-linux-android
+            platform: android
+            arch: x86_64
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.84.1
+          targets: ${{ matrix.target }}
+      - name: Install Java toolchain
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "temurin"
+      - name: Install Android toolchain
+        uses: android-actions/setup-android@v3
+        with:
+          cmdline-tools-version: 9477386
+      - name: Install haxe toolchain
+        uses: krdlab/setup-haxe@v2
+        with:
+          haxe-version: latest
+      - name: Install haxe dependencies
+        run: |
+          haxelib install jsasync
+      - name: Install Rustup Android toolchain
+        run: |
+          rustup target add ${{ matrix.target }}
+      - name: Build Android app and sign app
+        env:
+          NDK_HOME: /usr/local/lib/android/sdk/ndk/29.0.14206865
+          ANDROID_NDK_HOME: /usr/local/lib/android/sdk/ndk/29.0.14206865
+        run: |
+          npm run tauri android init
+          # 生成签名（需要调用我的秘密密钥）
+          keytool -genkey -v -keystore ~/upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload -storepass ${{ secrets.MY_ANDROID_KEYTOOL_PASSWORD }} -dname "CN=xphost, OU=CandySharkStudio, O=CandySharkStudio, L=BeiJing, ST=BeiJing, C=CN"
+          # 生成配置（需要调用我的秘密密钥）
+          echo -e "storePassword=${{ secrets.MY_ANDROID_KEYTOOL_PASSWORD }}\nkeyPassword=${{ secrets.MY_ANDROID_KEYTOOL_PASSWORD }}\nkeyAlias=upload\nstoreFile=/home/runner/upload-keystore.jks" >> src-tauri/gen/android/keystore.properties
+          # 修改 build.gradle.kts
+          # 首行新增一行 import
+          sed -i '1i import java.io.FileInputStream' src-tauri/gen/android/app/build.gradle.kts
+          # 随后找到 buildType 那一行的往上新增一句话。
+          sed -i '/buildType/isigningConfigs {\ncreate("release") {\nval keystorePropertiesFile = rootProject.file("keystore.properties")\nval keystoreProperties = Properties()\nif (keystorePropertiesFile.exists()) {\nkeystoreProperties.load(FileInputStream(keystorePropertiesFile))\n}\nkeyAlias = keystoreProperties["keyAlias"] as String\nkeyPassword = keystoreProperties["keyPassword"] as String\nstoreFile = file(keystoreProperties["storeFile"] as String)\nstorePassword = keystoreProperties["storePassword"] as String\n}\n}' src-tauri/gen/android/app/build.gradle.kts
+          # 最后在 getByName("release") 底下新增一行，完事！
+          sed -i '/getByName("release")/asigningConfig = signingConfigs.getByName("release")' src-tauri/gen/android/app/build.gradle.kts
+          # 再然后修改 AndroidManifest 进行强制横屏处理！
+          sed -i '/android:name=".MainActivity"/aandroid:screenOrientation="sensorLandscape"' src-tauri/gen/android/app/src/main/AndroidManifest.xml
+          # 再然后把所有图标放入目录里
+          rsync -av --remove-source-files src-tauri/icons/android/ src-tauri/gen/android/app/src/main/res/
+          # 最后再开始打包 Android。。 开始构建！！
+          npm run tauri android build -- --target ${{ matrix.arch }}
+      - name: Upload artifact android
+        uses: actions/upload-artifact@v4
+        with:
+          name: Bundle-${{matrix.platform}}-${{matrix.arch}}
+          path: "src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release.apk"
+          if-no-files-found: error
+  build-ios:
+    permissions:
+      contents: write
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+      - name: Install haxe toolchain
+        uses: krdlab/setup-haxe@v2
+        with:
+          haxe-version: latest
+      - name: Install haxe dependencies
+        run: |
+          haxelib install jsasync
+      - name: Add iOS targets to Rust
+        run: rustup target add aarch64-apple-ios
+      - name: Tauri iOS init
+        run: |
+          npm install
+          npm run tauri ios init
+          npm run tauri icon
+      - name: Setup Fake Xcodebuild Wrapper
+        run: |
+          mkdir -p /tmp/tauri_wrapper
+          cat << EOF > /tmp/tauri_wrapper/xcodebuild
+          #!/bin/bash
+          PROJ_FILE="$REPO_DIR/src-tauri/gen/apple/ren-rs.xcodeproj/project.pbxproj"
+          if [ -f "\$PROJ_FILE" ]; then
+            sed -i '' 's/DEVELOPMENT_TEAM = ".*";/DEVELOPMENT_TEAM = "";/g' "\$PROJ_FILE"
+            sed -i '' '/CODE_SIGN_IDENTITY/d' "\$PROJ_FILE"
+            sed -i '' '/CODE_SIGN_ENTITLEMENTS/d' "\$PROJ_FILE"
+          fi
+          /usr/bin/xcodebuild "\$@" \\
+            CODE_SIGN_STYLE=Manual \\
+            CODE_SIGNING_ALLOWED=NO \\
+            CODE_SIGNING_REQUIRED=NO \\
+            PROVISIONING_PROFILE_SPECIFIER=""
+          EOF
+          chmod +x /tmp/tauri_wrapper/xcodebuild
+      - name: Build Unsigned IPA pack!
+        env:
+          APPLE_DEVELOPMENT_TEAM: "woainimiao"
+          # CC_aarch64_apple_ios: "xcrun --sdk iphoneos clang"
+          # CXX_aarch64_apple_ios: "xcrun --sdk iphoneos clang++"
+          # AR_aarch64_apple_ios: "xcrun --sdk iphoneos ar"
+          # LUA_SRC_TARGET_OS: ios
+          # CARGO_TARGET_AARCH64_APPLE_IOS_LINKER: "xcrun --sdk iphoneos clang"
+          # CFLAGS_aarch64_apple_ios: "-target arm64-apple-ios -isysroot $(xcrun --sdk iphoneos --show-sdk-path)"
+          # DEVELOPMENT_TEAM: ""
+          # CODE_SIGN_IDENTITY: "-"
+          # CODE_SIGNING_ALLOWED: "NO"
+          # CODE_SIGNING_REQUIRED: "NO"
+          # PROVISIONING_PROFILE_SPECIFIER: ""
+        run: |
+          export PATH="/tmp/tauri_wrapper:$PATH"
+          npm run tauri ios build || true
+      - name: Package Unsigned .ipa
+        run: |
+          ARCHIVE_PATH=$(find src-tauri -name "*.xcarchive" | head -n 1)
+          if [ -z $ARCHIVE_PATH ]; then
+            exit 1
+          fi
+          echo "Found archive at: $ARCHIVE_PATH"
+          mkdir -p Payload
+          cp -R "$ARCHIVE_PATH/Products/Applications/"*.app Payload/
+          zip -r MyApp.unsigned.ipa Payload
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-unsigned-ipa
+          path: MyApp.unsigned.ipa
+  build-web:
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install haxe toolchain
+        uses: krdlab/setup-haxe@v2
+        with:
+          haxe-version: latest
+      - name: Install haxe dependencies
+        run: |
+          haxelib install jsasync
+      - name: Remove tauri code
+        run: |
+          sed -i
+      - name: Start Build
+        run: |
+          npm run only-gen
+          rm -rf src/src
+          rm -r src/build.hxml
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: Bundle-Web
+          path: "src"
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

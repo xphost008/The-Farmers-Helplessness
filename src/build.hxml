@@ -1,0 +1,5 @@
+-cp src
+-main Main
+-lib jsasync
+--js main.js
+-D js-es=6
