@@ -33,3 +33,22 @@ body {
     aspect-ratio: 16 / 9;
     overflow: hidden;
 }
+@keyframes reduce {
+    0% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(0.9);
+    }
+}
+@keyframes scalebig {
+    0% {
+        transform: scale(1.0);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1.0);
+    }
+}
