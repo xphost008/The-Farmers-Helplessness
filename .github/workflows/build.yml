@@ -17,10 +17,10 @@ jobs:
             target: x86_64-pc-windows-msvc
             platform: windows
             arch: x86_64
-          - os: windows-11-arm
-            target: aarch64-pc-windows-msvc
-            platform: windows
-            arch: aarch64
+          # - os: windows-11-arm
+          #   target: aarch64-pc-windows-msvc
+          #   platform: windows
+          #   arch: aarch64
           - os: macos-latest
             target: aarch64-apple-darwin
             platform: macos
@@ -33,10 +33,10 @@ jobs:
             target: x86_64-unknown-linux-gnu
             platform: linux
             arch: x86_64
-          - os: ubuntu-24.04-arm
-            target: aarch64-unknown-linux-gnu
-            platform: linux
-            arch: aarch64
+          # - os: ubuntu-24.04-arm
+          #   target: aarch64-unknown-linux-gnu
+          #   platform: linux
+          #   arch: aarch64
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -143,6 +143,10 @@ jobs:
       - name: Install Rustup Android toolchain
         run: |
           rustup target add ${{ matrix.target }}
+      - name: install frontend dependencies
+        run: |
+          npm install
+          npm run tauri icon
       - name: Build Android app and sign app
         env:
           NDK_HOME: /usr/local/lib/android/sdk/ndk/29.0.14206865
@@ -190,7 +194,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 24
+          node-version: lts/*
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
