@@ -2,8 +2,8 @@ name: Build App
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
+  # push:
+  #   branches: [main]
 
 jobs:
   build-desktop:
@@ -40,6 +40,7 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     steps:
+      - uses: actions/checkout@v4
       - name: Setup node
         uses: actions/setup-node@v4
         with:
@@ -270,7 +271,7 @@ jobs:
           haxelib install jsasync
       - name: Remove tauri code
         run: |
-          sed -i
+          sed --help
       - name: Start Build
         run: |
           npm run only-gen
