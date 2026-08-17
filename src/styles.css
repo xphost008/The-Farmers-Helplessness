@@ -6,7 +6,7 @@ body {
 
 @font-face {
     font-family: SHSSC;
-    src: url(assets/font/SourceHanSansSC-Bold.otf);
+    src: url(assets/fonts/SourceHanSansSC-Bold.otf);
 }
 * {
     font-family: SHSSC;
@@ -54,6 +54,66 @@ button {
     left: 0;
     width: 100cqi;
     height: 100cqb;
+}
+.click_me {
+    font-size: 3cqi;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    transition: transform 0.5s ease, opacity 2s ease;
+}
+.screen {
+    display: grid;
+    grid-template-rows: repeat(7, minmax(0, 1fr));
+    grid-auto-flow: column;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 95cqi;
+    height: 95cqb;
+    gap: 3cqb 3cqi;
+}
+.menu-bar {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100cqi;
+    height: 5cqb;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(to bottom, rgb(99, 141, 210), rgb(65, 90, 208) 70%, rgb(99, 141, 210));
+}
+.start-button {
+    display: flex;
+    align-items: center;
+    gap: 1cqi;
+    background: linear-gradient(to bottom, rgb(90, 141, 73), rgb(95, 154, 74) 70%, rgb(90, 141, 73));
+    height: 100%;
+    width: auto;
+    border-top-right-radius: 99999px;
+    border-bottom-right-radius: 99999px;
+    padding: 0 1cqi;
+}
+.time {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: auto;
+    padding: 0 1cqi;
+    color: white;
+    font-size: 2cqb;
+    background: linear-gradient(to bottom, rgb(105, 180, 237), rgb(82, 138, 224) 80%, rgb(105, 180, 237));
+}
+.desktop-icon-button {
+    display: flex;
+    flex-direction: column;
+    width: 10cqi;
+    height: 100%;
+    align-items: center;
 }
 @keyframes reduce {
     0% {

@@ -21,54 +21,74 @@ class Start implements IJSAsync {
         start_div.style.zIndex = "10";
         ROOT.appendChild(start_div);
         final menu_bar = cast(document.createElement("div"), DivElement);
-        menu_bar.style.position = "absolute";
-        menu_bar.style.bottom = "0";
-        menu_bar.style.left = "0";
-        menu_bar.style.width = "100cqi";
-        menu_bar.style.height = "5cqb";
-        menu_bar.style.display = "flex";
-        menu_bar.style.alignItems = "center";
-        menu_bar.style.background = "linear-gradient(to bottom, rgb(99, 141, 210), rgb(65, 90, 208) 70%, rgb(99, 141, 210))";
+        menu_bar.classList.add("menu-bar");
         start_div.appendChild(menu_bar);
         final start_button = cast(document.createElement("button"), ButtonElement);
-        start_button.style.display = "flex";
-        start_button.style.alignItems = "center";
-        start_button.style.gap = "1cqi";
-        start_button.style.background = "linear-gradient(to bottom, rgb(90, 141, 73), rgb(95, 154, 74) 70%, rgb(90, 141, 73))";
-        start_button.style.height = "100%";
-        start_button.style.width = "auto";
-        start_button.style.borderTopRightRadius = "99999px";
-        start_button.style.borderBottomRightRadius = "99999px";
-        start_button.style.padding = "0 1cqi";
+        start_button.classList.add("start-button");
         start_button.innerHTML = '
-        <img src="assets/images/icon/xpicon.png" style="height: 3cqb">
+        <img src="assets/images/icons/xpicon.png" style="height: 3cqb">
         <span style="font-size: 2.5cqb; color: white;">${getLangValue("start_button")}</span>
         ';
         menu_bar.appendChild(start_button);
-        MyScreen.MENU_BAR.style.display = "flex";
-        MyScreen.MENU_BAR.style.alignItems = "center";
-        MyScreen.MENU_BAR.style.height = "100%";
-        MyScreen.MENU_BAR.style.flex = "1";
-        menu_bar.appendChild(MyScreen.MENU_BAR);
+        MENU_BAR.style.display = "flex";
+        MENU_BAR.style.alignItems = "center";
+        MENU_BAR.style.height = "100%";
+        MENU_BAR.style.flex = "1";
+        menu_bar.appendChild(MENU_BAR);
         final time = cast(document.createElement("div"), DivElement);
-        time.style.display = "flex";
-        time.style.alignItems = "center";
-        time.style.justifyContent = "center";
-        time.style.height = "100%";
-        time.style.width = "auto";
-        time.style.padding = "0 1cqi";
-        time.style.color = "white";
-        time.style.background = "linear-gradient(to bottom, rgb(105, 180, 237), rgb(82, 138, 224) 80%, rgb(105, 180, 237))";
+        time.classList.add("time");
         final date = Date.now();
         final hours = date.getHours();
         final minutes = date.getMinutes();
-        time.style.fontSize = "2cqb";
         time.innerText = '${hours < 10 ? "0" : ""}${hours}:${minutes < 10 ? "0" : ""}${minutes}';
         menu_bar.appendChild(time);
+        SCREEN.classList.add("screen");
+        final MyComputerButton = cast(document.createElement("button"), ButtonElement);
+        MyComputerButton.classList.add("desktop-icon-button");
+        MyComputerButton.innerHTML = '
+        <img src="assets/images/icons/computer.png" style="height: 9cqb;">
+        <span style="font-size: 2cqb; color: white;">${getLangValue("my_computer")}</span>
+        ';
+        final InternalExplorerButton = cast(document.createElement("button"), ButtonElement);
+        InternalExplorerButton.classList.add("desktop-icon-button");
+        InternalExplorerButton.innerHTML = '
+        <img src="assets/images/icons/ie.png" style="height: 9cqb;">
+        <span style="font-size: 2cqb; color: white;">${getLangValue("ie")}</span>
+        ';
+        final RecycleButton = cast(document.createElement("button"), ButtonElement);
+        RecycleButton.classList.add("desktop-icon-button");
+        RecycleButton.innerHTML = '
+        <img src="assets/images/icons/recycle.png" style="height: 9cqb;">
+        <span style="font-size: 2cqb; color: white;">${getLangValue("recycle")}</span>
+        ';
+        final WeChatButton = cast(document.createElement("button"), ButtonElement);
+        WeChatButton.classList.add("desktop-icon-button");
+        WeChatButton.innerHTML = '
+        <img src="assets/images/icons/wechat.png" style="height: 9cqb;">
+        <span style="font-size: 2cqb; color: white;">${getLangValue("wechat")}</span>
+        ';
+        final SettingsButton = cast(document.createElement("button"), ButtonElement);
+        SettingsButton.classList.add("desktop-icon-button");
+        SettingsButton.innerHTML = '
+        <img src="assets/images/icons/settings.png" style="height: 9cqb;">
+        <span style="font-size: 2cqb; color: white;">${getLangValue("settings")}</span>
+        ';
+        SCREEN.appendChild(MyComputerButton);
+        SCREEN.appendChild(InternalExplorerButton);
+        SCREEN.appendChild(RecycleButton);
+        SCREEN.appendChild(WeChatButton);
+        SCREEN.appendChild(SettingsButton);
+        start_div.appendChild(SCREEN);
         jsawait(sleep(100));
         img.style.opacity = "1";
         start_div.style.opacity = "1";
         final xppoweron = new Audio("assets/sounds/xppoweron.wav");
         xppoweron.play();
+        window.setInterval(() -> {
+            final date = Date.now();
+            final hours = date.getHours();
+            final minutes = date.getMinutes();
+            time.innerText = '${hours < 10 ? "0" : ""}${hours}:${minutes < 10 ? "0" : ""}${minutes}';
+        }, 1000);
     }
 }
