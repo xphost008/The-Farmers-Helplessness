@@ -46,31 +46,31 @@ class Start implements IJSAsync {
         final MyComputerButton = cast(document.createElement("button"), ButtonElement);
         MyComputerButton.classList.add("desktop-icon-button");
         MyComputerButton.innerHTML = '
-        <img src="assets/images/icons/computer.png" style="height: 9cqb;">
+        <img src="assets/images/icons/computer.png" style="height: 8cqb;">
         <span style="font-size: 2cqb; color: white;">${getLangValue("my_computer")}</span>
         ';
         final InternalExplorerButton = cast(document.createElement("button"), ButtonElement);
         InternalExplorerButton.classList.add("desktop-icon-button");
         InternalExplorerButton.innerHTML = '
-        <img src="assets/images/icons/ie.png" style="height: 9cqb;">
+        <img src="assets/images/icons/ie.png" style="height: 8cqb;">
         <span style="font-size: 2cqb; color: white;">${getLangValue("ie")}</span>
         ';
         final RecycleButton = cast(document.createElement("button"), ButtonElement);
         RecycleButton.classList.add("desktop-icon-button");
         RecycleButton.innerHTML = '
-        <img src="assets/images/icons/recycle.png" style="height: 9cqb;">
+        <img src="assets/images/icons/recycle.png" style="height: 8cqb;">
         <span style="font-size: 2cqb; color: white;">${getLangValue("recycle")}</span>
         ';
         final WeChatButton = cast(document.createElement("button"), ButtonElement);
         WeChatButton.classList.add("desktop-icon-button");
         WeChatButton.innerHTML = '
-        <img src="assets/images/icons/wechat.png" style="height: 9cqb;">
+        <img src="assets/images/icons/wechat.png" style="height: 8cqb;">
         <span style="font-size: 2cqb; color: white;">${getLangValue("wechat")}</span>
         ';
         final SettingsButton = cast(document.createElement("button"), ButtonElement);
         SettingsButton.classList.add("desktop-icon-button");
         SettingsButton.innerHTML = '
-        <img src="assets/images/icons/settings.png" style="height: 9cqb;">
+        <img src="assets/images/icons/settings.png" style="height: 8cqb;">
         <span style="font-size: 2cqb; color: white;">${getLangValue("settings")}</span>
         ';
         SCREEN.appendChild(MyComputerButton);

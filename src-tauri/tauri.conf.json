@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "judgment-of-ash",
+  "productName": "farmers-helplessness",
   "version": "0.1.0",
-  "identifier": "com.xphost.judgment-of-ash",
+  "identifier": "com.xphost.farmers-helplessness",
   "build": {
     "frontendDist": "../src"
   },
@@ -10,7 +10,7 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "judgment-of-ash",
+        "title": "The Farmer's Helplessness",
         "width": 1280,
         "height": 720
       }
