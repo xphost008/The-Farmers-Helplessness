@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    farmers-helplessness_lib::run()
+    farmers_helplessness_lib::run()
 }
