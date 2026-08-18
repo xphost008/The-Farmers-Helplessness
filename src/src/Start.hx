@@ -1,5 +1,6 @@
 import jsasync.JSAsyncTools.jsawait;
 import jsasync.IJSAsync;
+import jsasync.JSAsync.jsasync;
 import Util.*;
 import js.Browser.*;
 import js.html.*;
@@ -49,9 +50,9 @@ class Start implements IJSAsync {
         <img src="assets/images/icons/computer.png" style="height: 8cqb;">
         <span style="font-size: 2cqb; color: white;">${getLangValue("my_computer")}</span>
         ';
-        final InternalExplorerButton = cast(document.createElement("button"), ButtonElement);
-        InternalExplorerButton.classList.add("desktop-icon-button");
-        InternalExplorerButton.innerHTML = '
+        final InternetExplorerButton = cast(document.createElement("button"), ButtonElement);
+        InternetExplorerButton.classList.add("desktop-icon-button");
+        InternetExplorerButton.innerHTML = '
         <img src="assets/images/icons/ie.png" style="height: 8cqb;">
         <span style="font-size: 2cqb; color: white;">${getLangValue("ie")}</span>
         ';
@@ -74,21 +75,47 @@ class Start implements IJSAsync {
         <span style="font-size: 2cqb; color: white;">${getLangValue("settings")}</span>
         ';
         SCREEN.appendChild(MyComputerButton);
-        SCREEN.appendChild(InternalExplorerButton);
+        SCREEN.appendChild(InternetExplorerButton);
         SCREEN.appendChild(RecycleButton);
         SCREEN.appendChild(WeChatButton);
         SCREEN.appendChild(SettingsButton);
+        MyComputerButton.addEventListener("dblclick", jsasync(() -> {
+        }));
+        InternetExplorerButton.addEventListener("dblclick", jsasync(() -> {
+        }));
+        RecycleButton.addEventListener("dblclick", jsasync(() -> {
+        }));
+        WeChatButton.addEventListener("dblclick", jsasync(() -> {
+        }));
+        SettingsButton.addEventListener("dblclick", jsasync(() -> {
+
+        }));
         start_div.appendChild(SCREEN);
         jsawait(sleep(100));
         img.style.opacity = "1";
         start_div.style.opacity = "1";
-        final xppoweron = new Audio("assets/sounds/xppoweron.wav");
-        xppoweron.play();
         window.setInterval(() -> {
             final date = Date.now();
             final hours = date.getHours();
             final minutes = date.getMinutes();
             time.innerText = '${hours < 10 ? "0" : ""}${hours}:${minutes < 10 ? "0" : ""}${minutes}';
         }, 1000);
+        jsawait(sleep(7000));
+        jsawait(play());
+    }
+    @:jsasync
+    static function play() {
+        //final xppoweron = new Audio("assets/sounds/xppoweron.wav");
+        //xppoweron.play();
+        jsawait(sleep(2000));
+        showToast('${getLangValue("wechat_helper_call_1")}');
+        jsawait(sleep(3600));
+        showToast('${getLangValue("wechat_helper_call_2")}');
+        jsawait(sleep(3600));
+        showToast('${getLangValue("wechat_helper_call_3")}');
+        jsawait(sleep(3600));
+        showToast('${getLangValue("wechat_helper_call_4")}');
+        jsawait(sleep(3600));
+        showToast('${getLangValue("wechat_helper_call_5")}');
     }
 }

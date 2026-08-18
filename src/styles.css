@@ -6,7 +6,7 @@ body {
 
 @font-face {
     font-family: SHSSC;
-    src: url(assets/fonts/SourceHanSansSC-Bold.otf);
+    src: url(assets/fonts/SourceHanSansCN-Regular.ttf);
 }
 * {
     font-family: SHSSC;
@@ -70,10 +70,9 @@ button {
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    margin: 0 auto;
-    width: 95cqi;
+    width: 100cqi;
     height: 95cqb;
+    padding: 0 2.5cqi;
     gap: 3cqb 3cqi;
 }
 .menu-bar {
@@ -114,6 +113,18 @@ button {
     width: 10cqi;
     height: 100%;
     align-items: center;
+}
+.toast {
+    position: absolute;
+    bottom: 10cqb;
+    right: 5cqi;
+    background-color: lightyellow;
+    color: black;
+    padding: 1cqb 1cqi;
+    border-radius: 1cqi;
+    border-block: 0.5cqb solid black;
+    border-inline: 0.5cqb solid black;
+    transition: opacity 0.3s, transform 0.3s;
 }
 @keyframes reduce {
     0% {
