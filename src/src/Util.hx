@@ -63,21 +63,26 @@ class Util implements IJSAsync {
 		"recycle" => ["Recycle Bin", "回收站", "資源回收筒",],
 		"wechat" => ["WeChat", "微信", "微信",],
 		"settings" => ["Settings", "设置", "設定",],
-		"wechat_helper_call_1" => ["Manager Horse: <br>Help!!", "马经理: <br>救命！", "马经理: <br>救命！",],
+		"settings_volume" => ["Game Volume: ${text}", "游戏音量：${text}", "遊戲聲音：${text}",],
+		"settings_fullscreen" => ["Is fullscreen", "是否全屏", "是否全屏",],
+		"settings_language" => ["Language", "语言", "語言",],
+		"wechat_helper_call_1" => ["Manager Horse: <br>Help!!", "马经理: <br>救命！", "馬經理: <br>救命！",],
+		"contact_manager_horse" => ["Manager Horse", "马经理", "馬經理"],
+		"contact_wife" => ["My dear wife", "我亲爱的老婆", "老婆大人"],
 		"wechat_helper_call_2" => [
 			"Manager Horse: <br>These horses are crazy!",
 			"马经理：<br>这些马疯了！",
-			"马经理：<br>這些馬瘋了！",
+			"馬經理：<br>這些馬瘋了！",
 		],
 		"wechat_helper_call_3" => [
 			"Manager Horse: <br>You must check the surveillance!",
 			"马经理：<br>你一定要看一下监控！",
-			"马经理：<br>你一定要看一下監控！",
+			"馬經理：<br>你一定要看一下監控！",
 		],
 		"wechat_helper_call_4" => [
 			"Manager Horse: <br>The surveillance I sent you!",
 			"马经理：<br>监控我发给你了！",
-			"马经理：<br>監控我發給你了！",
+			"馬經理：<br>監控我發給你了！",
 		],
 		"wechat_helper_call_5" => ["Manager Horse: <br>[Video]", "马经理：<br>视频", "马经理：<br>視頻",]
 	];
@@ -94,7 +99,7 @@ class Util implements IJSAsync {
 	}
 
 	public static function getLangValue(name:String):String {
-		final index = Std.parseInt(window.localStorage.getItem("judgment-of-ash-config-language") ?? "0") ?? 0;
+		final index = Std.parseInt(window.localStorage.getItem("the_farmer_helplessness_config_language") ?? "0") ?? 0;
 		return LANGUAGE[name][index];
 	}
 
