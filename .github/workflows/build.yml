@@ -80,14 +80,14 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                   name: Bundle-${{matrix.platform}}-${{matrix.arch}}
-                  path: "src-tauri/target/${{ matrix.target }}/release/judgment-of-ash.exe"
+                  path: "src-tauri/target/${{ matrix.target }}/release/farmers-helplessness.exe"
                   if-no-files-found: error
             - name: Upload artifact linux
               if: ${{matrix.platform == 'linux' || matrix.platform == 'freebsd'}}
               uses: actions/upload-artifact@v4
               with:
                   name: Bundle-${{matrix.platform}}-${{matrix.arch}}
-                  path: "src-tauri/target/${{ matrix.target }}/release/judgment-of-ash"
+                  path: "src-tauri/target/${{ matrix.target }}/release/farmers-helplessness"
                   if-no-files-found: error
             - name: Upload artifact macOS
               if: ${{matrix.platform == 'macos'}}
@@ -224,7 +224,7 @@ jobs:
                   mkdir -p /tmp/tauri_wrapper
                   cat << EOF > /tmp/tauri_wrapper/xcodebuild
                   #!/bin/bash
-                  PROJ_FILE="$REPO_DIR/src-tauri/gen/apple/judgment-of-ash.xcodeproj/project.pbxproj"
+                  PROJ_FILE="$REPO_DIR/src-tauri/gen/apple/farmars-helplessness.xcodeproj/project.pbxproj"
                   if [ -f "\$PROJ_FILE" ]; then
                     sed -i '' 's/DEVELOPMENT_TEAM = ".*";/DEVELOPMENT_TEAM = "";/g' "\$PROJ_FILE"
                     sed -i '' '/CODE_SIGN_IDENTITY/d' "\$PROJ_FILE"
