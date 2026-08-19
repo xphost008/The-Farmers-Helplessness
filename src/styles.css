@@ -12,6 +12,7 @@ body {
     font-family: SHSSC;
     font-size: 1.5cqi;
     user-select: none;
+    box-sizing: border-box;
 }
 #main {
     position: fixed;
@@ -61,7 +62,9 @@ button {
     border: none;
     outline: none;
     color: white;
-    transition: transform 0.5s ease, opacity 2s ease;
+    transition:
+        transform 0.5s ease,
+        opacity 2s ease;
 }
 .screen {
     display: grid;
@@ -83,13 +86,23 @@ button {
     height: 5cqb;
     display: flex;
     align-items: center;
-    background: linear-gradient(to bottom, rgb(99, 141, 210), rgb(65, 90, 208) 70%, rgb(99, 141, 210));
+    background: linear-gradient(
+        to bottom,
+        rgb(99, 141, 210),
+        rgb(65, 90, 208) 70%,
+        rgb(99, 141, 210)
+    );
 }
 .start-button {
     display: flex;
     align-items: center;
     gap: 1cqi;
-    background: linear-gradient(to bottom, rgb(90, 141, 73), rgb(95, 154, 74) 70%, rgb(90, 141, 73));
+    background: linear-gradient(
+        to bottom,
+        rgb(90, 141, 73),
+        rgb(95, 154, 74) 70%,
+        rgb(90, 141, 73)
+    );
     height: 100%;
     width: auto;
     border-top-right-radius: 99999px;
@@ -105,7 +118,12 @@ button {
     padding: 0 1cqi;
     color: white;
     font-size: 2cqb;
-    background: linear-gradient(to bottom, rgb(105, 180, 237), rgb(82, 138, 224) 80%, rgb(105, 180, 237));
+    background: linear-gradient(
+        to bottom,
+        rgb(105, 180, 237),
+        rgb(82, 138, 224) 80%,
+        rgb(105, 180, 237)
+    );
 }
 .desktop-icon-button {
     display: flex;
@@ -124,7 +142,101 @@ button {
     border-radius: 1cqi;
     border-block: 0.5cqb solid black;
     border-inline: 0.5cqb solid black;
-    transition: opacity 0.3s, transform 0.3s;
+    transition:
+        opacity 0.3s,
+        transform 0.3s;
+    z-index: 99999;
+}
+.window {
+    position: absolute;
+    min-width: 50cqi;
+    min-height: 50cqb;
+    background-color: rgb(239, 239, 230);
+    border: 0.5cqb solid rgb(0, 83, 228);
+    border-radius: 0.5cqi;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.window-header {
+    background-color: rgb(0, 83, 228);
+    height: 4.5cqb;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 0.3cqi;
+    cursor: grab;
+    flex-shrink: 0;
+    gap: 0.2cqi;
+}
+.window-body {
+    background: transparent;
+    flex: 1;
+    width: 100%;
+}
+.window-title {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    color: #eee;
+    font-weight: bold;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.window-controls {
+    display: flex;
+    width: auto;
+    gap: 0.2cqi;
+    align-items: center;
+    flex-shrink: 0;
+}
+.btn-control {
+    width: 3.5cqb;
+    height: 3.5cqb;
+    border: 0.2cqb solid white;
+    background: linear-gradient(
+        to right bottom,
+        rgb(120, 160, 255),
+        rgb(23, 86, 246)
+    );
+}
+.btn-close {
+    background: linear-gradient(
+        to right bottom,
+        rgb(235, 152, 139),
+        rgb(206, 70, 21)
+    );
+}
+.btn-control:hover {
+    filter: brightness(120%);
+}
+.btn-control:active {
+    filter: brightness(140%);
+}
+.taskbar-item {
+    border-radius: 0.05cqi;
+    background-color: rgb(57, 127, 241);
+    width: 10cqi;
+    height: 4cqb;
+    padding: 0 0.1cqi;
+    display: flex;
+    align-items: center;
+    color: white;
+}
+.taskbar-item.active {
+    background-color: rgb(27, 97, 181);
+    border: 0.1cqb solid rgb(57, 127, 241);
+}
+.maximized {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 0 !important;
+    z-index: 9999 !important;
 }
 @keyframes reduce {
     0% {
@@ -136,12 +248,12 @@ button {
 }
 @keyframes scalebig {
     0% {
-        transform: scale(1.0);
+        transform: scale(1);
     }
     50% {
         transform: scale(1.2);
     }
     100% {
-        transform: scale(1.0);
+        transform: scale(1);
     }
 }

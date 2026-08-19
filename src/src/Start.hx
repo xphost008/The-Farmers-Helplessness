@@ -35,6 +35,7 @@ class Start implements IJSAsync {
         MENU_BAR.style.alignItems = "center";
         MENU_BAR.style.height = "100%";
         MENU_BAR.style.flex = "1";
+        MENU_BAR.style.gap = "0.1cqi";
         menu_bar.appendChild(MENU_BAR);
         final time = cast(document.createElement("div"), DivElement);
         time.classList.add("time");
@@ -88,7 +89,10 @@ class Start implements IJSAsync {
         WeChatButton.addEventListener("dblclick", jsasync(() -> {
         }));
         SettingsButton.addEventListener("dblclick", jsasync(() -> {
-
+            createWindow(4, {
+                content: '',
+            });
+            jsawait(sleep(100));
         }));
         start_div.appendChild(SCREEN);
         jsawait(sleep(100));
