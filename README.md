@@ -9,3 +9,5 @@ I hope you enjoy it!
 all of release are in [itch](https://xphost.itch.io/farmers-helplessness), welcome to download!
 
 LICENSE: MIT
+
+Support Language: English, Simplified Chinese, Traditional Chinese

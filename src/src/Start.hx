@@ -21,6 +21,24 @@ class Start implements IJSAsync {
 			"record": []
 		},
 	];
+	static final MY_COMPUTER_FILES:Map<String, Array<Map<String, String>>> = [
+		"" => [
+			["name" => "C:", "type" => "disk", "to" => "C:\\"],
+			["name" => "D:", "type" => "disk", "to" => "D:\\"],
+		],
+		"C:\\" => [
+			["name" => "Windows", "type" => "folder", "lock" => "true"],
+			["name" => getLangValue("cp_c_backup"), "type" => "folder", "to" => "C:\\Backup"],
+		],
+		"D:\\" => [
+			["name" => getLangValue("cp_d_video"), "type" => "folder", "to" => "D:\\Video"],
+			[
+				"name" => getLangValue("cp_d_document"),
+				"type" => "folder",
+				"to" => "D:\\Document"
+			],
+		]
+	];
 
 	@:jsasync
 	public static function run() {
@@ -96,17 +114,94 @@ class Start implements IJSAsync {
 		SCREEN.appendChild(RecycleButton);
 		SCREEN.appendChild(WeChatButton);
 		SCREEN.appendChild(SettingsButton);
-		MyComputerButton.addEventListener("dblclick", jsasync(() -> {
+		MyComputerButton.addEventListener("dblclick", () -> {
 			createWindow(0, {
 				content: '
-				<div class="window-screen">
-				    <div style="width: 100%; height: 5cqb; display: flex; align-items: center;">
-
-					</div>
+			<div class="window-screen" style="padding: 0 1cqi;">
+			    <div style="width: 100%; height: 5cqb; display: flex; align-items: center; gap: 0.5cqi;">
+					<button class="button-back">
+					<svg xmlns="http://www.w3.org/2000/svg" style="width: 4cqb; height: 4cqb;" viewBox="0 0 24 24">
+					<g fill="none">
+					<path fill="#33FF33" d="M22.518 9.59H9.99l5.1-5.95a.483.483 0 0 0-.366-.795H9.24a.48.48 0 0 0-.359.16l-7.76 8.674a.48.48 0 0 0 0 .642l7.76 8.673a.48.48 0 0 0 .36.161h5.482a.481.481 0 0 0 .366-.795l-5.1-5.95h12.528a.48.48 0 0 0 .482-.483v-3.854a.48.48 0 0 0-.482-.482"/>
+					<path fill="#009900" d="M1 12c0 .118.044.233.122.32l7.76 8.674a.48.48 0 0 0 .36.16h5.482a.482.482 0 0 0 .366-.794l-5.1-5.95h12.528a.48.48 0 0 0 .482-.483V12z"/>
+					<path stroke="#003319" stroke-linecap="round" stroke-linejoin="round" d="M22.518 9.59H9.99l5.1-5.95a.483.483 0 0 0-.366-.795H9.24a.48.48 0 0 0-.359.16l-7.76 8.674a.48.48 0 0 0 0 .642l7.76 8.673a.48.48 0 0 0 .36.161h5.482a.481.481 0 0 0 .366-.795l-5.1-5.95h12.528a.48.48 0 0 0 .482-.483v-3.854a.48.48 0 0 0-.482-.482"/>
+					</g>
+					</svg>
+					</button>
+					<button class="button-front">
+					<svg xmlns="http://www.w3.org/2000/svg" style="width: 4cqb; height: 4cqb; transform: rotate(180deg);" viewBox="0 0 24 24">
+					<g fill="none">
+					<path fill="#33FF33" d="M22.518 9.59H9.99l5.1-5.95a.483.483 0 0 0-.366-.795H9.24a.48.48 0 0 0-.359.16l-7.76 8.674a.48.48 0 0 0 0 .642l7.76 8.673a.48.48 0 0 0 .36.161h5.482a.481.481 0 0 0 .366-.795l-5.1-5.95h12.528a.48.48 0 0 0 .482-.483v-3.854a.48.48 0 0 0-.482-.482"/>
+					<path fill="#009900" d="M1 12c0 .118.044.233.122.32l7.76 8.674a.48.48 0 0 0 .36.16h5.482a.482.482 0 0 0 .366-.794l-5.1-5.95h12.528a.48.48 0 0 0 .482-.483V12z"/>
+					<path stroke="#003319" stroke-linecap="round" stroke-linejoin="round" d="M22.518 9.59H9.99l5.1-5.95a.483.483 0 0 0-.366-.795H9.24a.48.48 0 0 0-.359.16l-7.76 8.674a.48.48 0 0 0 0 .642l7.76 8.673a.48.48 0 0 0 .36.161h5.482a.481.481 0 0 0 .366-.795l-5.1-5.95h12.528a.48.48 0 0 0 .482-.483v-3.854a.48.48 0 0 0-.482-.482"/>
+					</g>
+					</svg>
+					</button>
+					<input class="disk-input" style="height: 4cqb; font-size: 2cqb; flex: 1;" type="text">
+					<button class="button-submit">
+					<svg xmlns="http://www.w3.org/2000/svg" style="width: 4cqb; height: 4cqb;" viewBox="0 0 24 24">
+					<path fill="currentColor" d="M19 6a1 1 0 0 0-1 1v4a1 1 0 0 1-1 1H7.41l1.3-1.29a1 1 0 0 0-1.42-1.42l-3 3a1 1 0 0 0-.21.33a1 1 0 0 0 0 .76a1 1 0 0 0 .21.33l3 3a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.42L7.41 14H17a3 3 0 0 0 3-3V7a1 1 0 0 0-1-1"/>
+					</svg>
+					</button>
 				</div>
-				'
+				<div class="computer-body"></div>
+			</div>
+			'
 			});
-		}));
+			function gotoWindow(disk:String) {
+				final cb = SCREEN.querySelector(".computer-body");
+				cb.innerHTML = '';
+				final files = MY_COMPUTER_FILES[disk];
+				if (files == null || files.length == 0) return;
+				for (file in files) {
+					var img = "";
+					if (file["type"] == "disk")
+						img = "assets/images/icons/disk.png";
+					else if (file["type"] == "folder")
+						img = "assets/images/icons/folder.png";
+					else
+						img = "assets/images/icons/file.png";
+					final i_button = cast(document.createElement("button"), ButtonElement);
+					i_button.classList.add("desktop-icon-button");
+					i_button.style.width = "6cqi";
+					i_button.style.height = "8cqb";
+					i_button.innerHTML = '
+                    <img src="${img}" style="height: 5cqb;">
+                    <span style="font-size: 2cqb; color: black;">${file["name"]}</span>
+					';
+					i_button.addEventListener("dblclick", (e) -> {
+						if (file["lock"] == "true") {
+							window.alert(getLangValue("file_or_folder_cannot_open"));
+							return;
+						}
+						if (file["password"] != null) {
+							final password = window.prompt(getLangValue("file_or_folder_need_password"));
+							if (password != file["password"]) {
+								window.alert(getLangValue("file_or_folder_incorrect_password"));
+								return;
+							}
+						}
+						if (file["type"] == "file") {
+							createWindow(5, {
+								content: file["content"],
+							});
+						}
+						if (file["type"] == "disk" || file["type"] == "folder") {
+							gotoWindow(file["to"]);
+							final di = cast(SCREEN.querySelector(".disk-input"), InputElement);
+							di.value = file["to"];
+						}
+					});
+					cb.appendChild(i_button);
+				}
+			}
+			gotoWindow("");
+			SCREEN.querySelector(".button-submit").addEventListener("click", (e) -> {
+			    final di = cast(SCREEN.querySelector(".disk-input"), InputElement);
+				final value = di.value;
+				gotoWindow(value);
+			});
+		});
 		InternetExplorerButton.addEventListener("dblclick", jsasync(() -> {}));
 		RecycleButton.addEventListener("dblclick", jsasync(() -> {
 			createWindow(2, {

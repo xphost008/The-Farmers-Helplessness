@@ -63,13 +63,19 @@ class Util implements IJSAsync {
 		"recycle" => ["Recycle Bin", "回收站", "資源回收筒",],
 		"wechat" => ["WeChat", "微信", "微信",],
 		"settings" => ["Settings", "设置", "設定",],
-		"settings_volume" => ["Game Volume: ${text}", "游戏音量：${text}", "遊戲聲音：${text}",],
-		"settings_fullscreen" => ["Is fullscreen", "是否全屏", "是否全屏",],
+		"settings_volume" => ["Game Volume: ${text}", "游戏音量：${text}", "遊戲音量：${text}",],
+		"settings_fullscreen" => ["Is fullscreen", "是否全屏", "是否全螢幕",],
 		"settings_language" => ["Language", "语言", "語言",],
-		"hint_restart_game" => ["Please restart game to apply settings!", "请重启游戏以应用设置修改！", "請重啓遊戲以應用修改！"],
+		"hint_restart_game" => ["Please restart game to apply settings!", "请重启游戏以应用设置修改！", "請重新啟動遊戲以套用設定！"],
 		"recycle_is_empty" => ["Recycle Bin is empty", "回收站为空", "資源回收筒是空的"],
 		"contact_manager_horse" => ["Manager Horse", "马经理", "馬經理"],
 		"contact_wife" => ["My dear wife", "我亲爱的老婆", "老婆大人"],
+		"cp_c_backup" => ["Backup", "备份", "備份"],
+		"cp_d_video" => ["Video", "视频", "影片"],
+		"cp_d_document" => ["Document", "文档", "文檔"],
+		"file_or_folder_cannot_open" => ["The file cannot be opened", "文件无法打开", "無法開啟此文檔"],
+		"file_or_folder_need_password" => ["The file need a password, please enter:", "文件需要密码，请输入：", "此文檔需要密碼，請輸入："],
+		"file_or_folder_incorrect_password" => ["Incorrect password!", "密码错误！", "密碼錯誤！"],
 		"wechat_helper_call_1" => ["Manager Horse: <br>Help!!", "马经理: <br>救命！", "馬經理: <br>救命！",],
 		"wechat_helper_call_2" => [
 			"Manager Horse: <br>These horses are crazy!",
@@ -86,7 +92,7 @@ class Util implements IJSAsync {
 			"马经理：<br>监控我发给你了！",
 			"馬經理：<br>監控我發給你了！",
 		],
-		"wechat_helper_call_5" => ["Manager Horse: <br>[Video]", "马经理：<br>[视频]", "马经理：<br>[視頻]",]
+		"wechat_helper_call_5" => ["Manager Horse: <br>[Video]", "马经理：<br>[视频]", "馬經理：<br>[影片]",]
 	];
 	public static final ROOT = cast(document.getElementById("main_box"), DivElement);
 	public static final MENU_BAR = cast(document.createElement("div"), DivElement);
