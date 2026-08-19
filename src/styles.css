@@ -238,12 +238,11 @@ button {
     border-radius: 0 !important;
     z-index: 9999 !important;
 }
-.settings-screen {
+.window-screen {
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
-    padding: 1cqb 1cqi;
 }
 @keyframes reduce {
     0% {

@@ -66,9 +66,11 @@ class Util implements IJSAsync {
 		"settings_volume" => ["Game Volume: ${text}", "游戏音量：${text}", "遊戲聲音：${text}",],
 		"settings_fullscreen" => ["Is fullscreen", "是否全屏", "是否全屏",],
 		"settings_language" => ["Language", "语言", "語言",],
-		"wechat_helper_call_1" => ["Manager Horse: <br>Help!!", "马经理: <br>救命！", "馬經理: <br>救命！",],
+		"hint_restart_game" => ["Please restart game to apply settings!", "请重启游戏以应用设置修改！", "請重啓遊戲以應用修改！"],
+		"recycle_is_empty" => ["Recycle Bin is empty", "回收站为空", "資源回收筒是空的"],
 		"contact_manager_horse" => ["Manager Horse", "马经理", "馬經理"],
 		"contact_wife" => ["My dear wife", "我亲爱的老婆", "老婆大人"],
+		"wechat_helper_call_1" => ["Manager Horse: <br>Help!!", "马经理: <br>救命！", "馬經理: <br>救命！",],
 		"wechat_helper_call_2" => [
 			"Manager Horse: <br>These horses are crazy!",
 			"马经理：<br>这些马疯了！",
@@ -84,7 +86,7 @@ class Util implements IJSAsync {
 			"马经理：<br>监控我发给你了！",
 			"馬經理：<br>監控我發給你了！",
 		],
-		"wechat_helper_call_5" => ["Manager Horse: <br>[Video]", "马经理：<br>视频", "马经理：<br>視頻",]
+		"wechat_helper_call_5" => ["Manager Horse: <br>[Video]", "马经理：<br>[视频]", "马经理：<br>[視頻]",]
 	];
 	public static final ROOT = cast(document.getElementById("main_box"), DivElement);
 	public static final MENU_BAR = cast(document.createElement("div"), DivElement);
@@ -99,7 +101,7 @@ class Util implements IJSAsync {
 	}
 
 	public static function getLangValue(name:String):String {
-		final index = Std.parseInt(window.localStorage.getItem("the_farmer_helplessness_config_language") ?? "0") ?? 0;
+		final index = Std.parseInt(window.localStorage.getItem("the_farmer_helplessness_language") ?? "0") ?? 0;
 		return LANGUAGE[name][index];
 	}
 
@@ -115,8 +117,8 @@ class Util implements IJSAsync {
 	public static function showToast(message:String, duration:Int = 3000) {
 		final toast = cast(document.createElement("div"), DivElement);
 		toast.innerHTML = '
-<img src="assets/images/icons/wechat.png" style="width: 1.5cqi; height: 1.5cqi; margin-right: 0.3cqi;">
-${message}
+        <img src="assets/images/icons/wechat.png" style="width: 1.5cqi; height: 1.5cqi; margin-right: 0.3cqi;">
+        ${message}
         ';
 		toast.classList.add("toast");
 		toast.style.opacity = "0";
@@ -144,6 +146,15 @@ ${message}
 
 	public static function createWindow(index:Int, options:WindowOption):Int {
 		final app_arr = ["my_computer", "ie", "recycle", "wechat", "settings"];
+		final app = app_arr[index] ?? options.app ?? "App";
+		final existing = Lambda.find(State.windows, (w) -> w.app == app && !w.isMinimized);
+		if (existing != null) {
+			existing.isMinimized = false;
+			existing.el.style.display = "flex";
+			bringToFront(existing.id);
+			updateTaskbar();
+			return existing.id;
+		}
 		final title_arr = [
 			getLangValue("my_computer"),
 			getLangValue("ie"),
@@ -151,6 +162,7 @@ ${message}
 			getLangValue("wechat"),
 			getLangValue("settings")
 		];
+		final title = title_arr[index] ?? options.title ?? "Title";
 		final icon_arr = [
 			"assets/images/icons/computer.png",
 			"assets/images/icons/ie.png",
@@ -158,8 +170,6 @@ ${message}
 			"assets/images/icons/wechat.png",
 			"assets/images/icons/settings.png"
 		];
-		final app = app_arr[index] ?? options.app ?? "App";
-		final title = title_arr[index] ?? options.title ?? "Title";
 		final icon = icon_arr[index] ?? options.icon ?? "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' style='color: white;' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='currentColor' stroke-width='1.5'%3E%3Cpath d='M12.25 2.75a9.5 9.5 0 1 1 0 19a9.5 9.5 0 0 1 0-19Z'/%3E%3Cpath d='M14.62 12.25a2.37 2.37 0 1 0-4.74 0a2.37 2.37 0 0 0 4.74 0Z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12.25 18.93a6.7 6.7 0 0 1-5.24-2.53m7.24-10.53a6.69 6.69 0 0 1 4.4 4.48'/%3E%3C/g%3E%3C/svg%3E";
 		final id = State.nextId++;
 		final el = cast(document.createElement("div"), DivElement);
@@ -169,7 +179,7 @@ ${message}
 		header.classList.add("window-header");
 		header.innerHTML = '
             <div class="window-title">
-                <img src="${icon}" alt="${title}" style="height: 4cqb; width: auto; margin: 0 0.2cqi;" />
+                <img src="${icon}" alt="${title}" style="height: 3.2cqb; width: auto; margin: 0 0.2cqi;" />
                 <span style="font-size: 2cqb;">${title}</span>
             </div>
             <div class="window-controls">
@@ -258,7 +268,6 @@ ${message}
 			final maxY = 95 - win.rect.height;
 			win.rect.x = clamp(newX, 0, maxX);
 			win.rect.y = clamp(newY, 0, maxY);
-
 			win.el.style.left = win.rect.x + "cqi";
 			win.el.style.top = win.rect.y + "cqb";
 		});
@@ -390,7 +399,7 @@ ${message}
 				item.classList.add("active");
 			}
 			item.innerHTML = '
-                <img src="${win.icon}" style="height: 2.6cqb; width: auto;">
+                <img src="${win.icon}" style="height: 2cqb; width: auto; margin: 0 0.2cqb;">
                 <div style="font-size: 2.5cqb;">${win.title}</div>
             ';
 			item.addEventListener("click", (event) -> {

@@ -96,53 +96,60 @@ class Start implements IJSAsync {
 		SCREEN.appendChild(RecycleButton);
 		SCREEN.appendChild(WeChatButton);
 		SCREEN.appendChild(SettingsButton);
-		MyComputerButton.addEventListener("dblclick", jsasync(() -> {}));
+		MyComputerButton.addEventListener("dblclick", jsasync(() -> {
+			createWindow(0, {
+				content: '
+				<div class="window-screen">
+				    <div style="width: 100%; height: 5cqb; display: flex; align-items: center;">
+
+					</div>
+				</div>
+				'
+			});
+		}));
 		InternetExplorerButton.addEventListener("dblclick", jsasync(() -> {}));
-		RecycleButton.addEventListener("dblclick", jsasync(() -> {}));
+		RecycleButton.addEventListener("dblclick", jsasync(() -> {
+			createWindow(2, {
+				content: '
+				<div class="window-screen" style="align-items: center; justify-content: center;">
+				    <h1>${getLangValue("recycle_is_empty")}</h1>
+				</div>
+				'
+			});
+		}));
 		WeChatButton.addEventListener("dblclick", jsasync(() -> {}));
 		SettingsButton.addEventListener("dblclick", () -> {
 			createWindow(4, {
 				content: '
-				<div class="settings-screen">
+				<div class="window-screen" style="padding: 1cqb 1cqi;">
 				    <div class="settings-volume-text" style="font-size: 1cqi; font-weight: bold;">${getLangValue("settings_volume").replace("${text}", window.localStorage.getItem("the_farmer_helplessness_volume") ?? "100")}</div>
 					<input class="settings-volume-scroll" type="range" min="0" max="100" value="${window.localStorage.getItem("the_farmer_helplessness_volume") ?? "100"}"/>
 			        <div class="settings-fullscreen-text" style="font-size: 1cqi; font-weight: bold;">${getLangValue("settings_fullscreen")}</div>
 					<input class="settings-fullscreen-checkbox" type="checkbox" ${window.localStorage.getItem("the_farmer_helplessness_fullscreen") == "true" ? "checked" : ""}/>
 			        <div class="settings-language-text" style="font-size: 1cqi; font-weight: bold;">${getLangValue("settings_language")}</div>
-			        <select class="settings-language-select" value="0">
-			            <option value="0">English</option>
-			            <option value="1">简体中文</option>
-			            <option value="2">繁體中文</option>
+			        <select class="settings-language-select">
+			            <option value="0" ${window.localStorage.getItem("the_farmer_helplessness_language") == "0" ? "selected" : ""}>English</option>
+			            <option value="1" ${window.localStorage.getItem("the_farmer_helplessness_language") == "1" ? "selected" : ""}>简体中文</option>
+			            <option value="2" ${window.localStorage.getItem("the_farmer_helplessness_language") == "2" ? "selected" : ""}>繁體中文</option>
 			        </select>
 			    </div>
 				',
 			});
-			for (el in SCREEN.querySelectorAll(".settings-volume-scroll")) {
-				el.addEventListener("input", (e) -> {
-					var value = Std.string(e.target.value);
-					window.localStorage.setItem("the_farmer_helplessness_volume", value);
-					for (el2 in SCREEN.querySelectorAll(".settings-volume-text")) {
-						var el2r = cast(el2, DivElement);
-						el2r.innerText = getLangValue("settings_volume").replace("${text}", value);
-					}
-					for (el2 in SCREEN.querySelectorAll(".settings-volume-scroll")) {
-						var el2r = cast(el2, InputElement);
-						el2r.value = value;
-					}
-				});
-			}
-			for (el in SCREEN.querySelectorAll(".settings-fullscreen-checkbox")) {
-				el.addEventListener("change", (e) -> {
-					var target = cast(e.target, InputElement);
-					var isChecked = target.checked;
-					End.setFullscreen(isChecked);
-					window.localStorage.setItem("the_farmer_helplessness_fullscreen", isChecked ? "true" : "false");
-					for (other in SCREEN.querySelectorAll(".settings-fullscreen-checkbox")) {
-						var otherInput = cast(other, InputElement);
-						otherInput.checked = isChecked;
-					}
-				});
-			}
+			SCREEN.querySelector(".settings-volume-scroll").addEventListener("input", (e) -> {
+				var value = Std.string(e.target.value);
+				window.localStorage.setItem("the_farmer_helplessness_volume", value);
+				SCREEN.querySelector(".settings-volume-text").innerText = getLangValue("settings_volume").replace("${text}", value);
+			});
+			SCREEN.querySelector(".settings-fullscreen-checkbox").addEventListener("change", (e) -> {
+				var isChecked = cast(e.target, InputElement).checked;
+				End.setFullscreen(isChecked);
+				window.localStorage.setItem("the_farmer_helplessness_fullscreen", isChecked ? "true" : "false");
+			});
+			SCREEN.querySelector(".settings-language-select").addEventListener("change", (e) -> {
+				var value = cast(e.target, SelectElement).value;
+				window.localStorage.setItem("the_farmer_helplessness_language", value);
+				window.alert(getLangValue("hint_restart_game"));
+			});
 		});
 		start_div.appendChild(SCREEN);
 		jsawait(sleep(100));
