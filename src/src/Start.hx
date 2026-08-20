@@ -8,20 +8,34 @@ import back.*;
 
 using StringTools;
 
+typedef RECORD_TYPE = {
+	name:String,
+	content:String,
+}
+
+typedef WECHAT_RECORD_TYPE = {
+	name:String,
+	avatar:String,
+	record:Array<RECORD_TYPE>,
+}
+
 class Start implements IJSAsync {
 	static final WECHAT_SCREEN = cast(document.createElement("div"), DivElement);
 	static final SETTING_SCREEN = cast(document.createElement("div"), DivElement);
-	static final WECHAT_RECORD:Array<Dynamic> = [
+	static var current_wechat:Int = -1;
+	static var WECHAT_RECORD:Array<WECHAT_RECORD_TYPE> = [
 		{
-			"name": getLangValue("contact_manager_horse"),
-			"record": []
+			name: getLangValue("contact_manager_horse"),
+			avatar: "👨",
+			record: [],
 		},
 		{
-			"name": getLangValue("contact_wife"),
-			"record": []
+			name: getLangValue("contact_wife"),
+			avatar: "👩",
+			record: [],
 		},
 	];
-	static final MY_COMPUTER_FILES:Map<String, Array<Map<String, String>>> = [
+	static var MY_COMPUTER_FILES:Map<String, Array<Map<String, String>>> = [
 		"" => [
 			["name" => "C:", "type" => "disk", "to" => "C:\\"],
 			["name" => "D:", "type" => "disk", "to" => "D:\\"],
@@ -30,14 +44,28 @@ class Start implements IJSAsync {
 			["name" => "Windows", "type" => "folder", "lock" => "true"],
 			["name" => getLangValue("cp_c_backup"), "type" => "folder", "to" => "C:\\Backup"],
 		],
+		"C:\\Backup" => [
+			[
+				"name" => getLangValue("cp_c_backup_horse_crazy"),
+				"type" => "file",
+				"content" => '<video src="assets/media/horse_crazy.mp4" control autoplay loop style="width: 100%; height: 100%;">',
+				"title" => getLangValue("cp_c_backup_horse_crazy"),
+				"app" => "Surveillance"
+			],
+		],
 		"D:\\" => [
 			["name" => getLangValue("cp_d_video"), "type" => "folder", "to" => "D:\\Video"],
 			[
 				"name" => getLangValue("cp_d_document"),
 				"type" => "folder",
-				"to" => "D:\\Document"
+				"to" => "D:\\Document",
 			],
-		]
+			[
+				"name" => getLangValue("cp_d_picture"),
+				"type" => "folder",
+				"to" => "D:\\Picture",
+			],
+		],
 	];
 
 	@:jsasync
@@ -138,7 +166,7 @@ class Start implements IJSAsync {
 					</svg>
 					</button>
 					<input class="disk-input" style="height: 4cqb; font-size: 2cqb; flex: 1;" type="text">
-					<button class="button-submit">
+					<button class="computer-submit">
 					<svg xmlns="http://www.w3.org/2000/svg" style="width: 4cqb; height: 4cqb;" viewBox="0 0 24 24">
 					<path fill="currentColor" d="M19 6a1 1 0 0 0-1 1v4a1 1 0 0 1-1 1H7.41l1.3-1.29a1 1 0 0 0-1.42-1.42l-3 3a1 1 0 0 0-.21.33a1 1 0 0 0 0 .76a1 1 0 0 0 .21.33l3 3a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.42L7.41 14H17a3 3 0 0 0 3-3V7a1 1 0 0 0-1-1"/>
 					</svg>
@@ -152,7 +180,8 @@ class Start implements IJSAsync {
 				final cb = SCREEN.querySelector(".computer-body");
 				cb.innerHTML = '';
 				final files = MY_COMPUTER_FILES[disk];
-				if (files == null || files.length == 0) return;
+				if (files == null || files.length == 0)
+					return;
 				for (file in files) {
 					var img = "";
 					if (file["type"] == "disk")
@@ -169,7 +198,7 @@ class Start implements IJSAsync {
                     <img src="${img}" style="height: 5cqb;">
                     <span style="font-size: 2cqb; color: black;">${file["name"]}</span>
 					';
-					i_button.addEventListener("dblclick", (e) -> {
+					i_button.addEventListener("dblclick", () -> {
 						if (file["lock"] == "true") {
 							window.alert(getLangValue("file_or_folder_cannot_open"));
 							return;
@@ -184,6 +213,8 @@ class Start implements IJSAsync {
 						if (file["type"] == "file") {
 							createWindow(5, {
 								content: file["content"],
+								title: file["title"],
+								app: file["app"],
 							});
 						}
 						if (file["type"] == "disk" || file["type"] == "folder") {
@@ -196,14 +227,55 @@ class Start implements IJSAsync {
 				}
 			}
 			gotoWindow("");
-			SCREEN.querySelector(".button-submit").addEventListener("click", (e) -> {
-			    final di = cast(SCREEN.querySelector(".disk-input"), InputElement);
+			SCREEN.querySelector(".computer-submit").addEventListener("click", () -> {
+				final di = cast(SCREEN.querySelector(".disk-input"), InputElement);
 				final value = di.value;
 				gotoWindow(value);
 			});
 		});
-		InternetExplorerButton.addEventListener("dblclick", jsasync(() -> {}));
-		RecycleButton.addEventListener("dblclick", jsasync(() -> {
+		InternetExplorerButton.addEventListener("dblclick", () -> {
+			createWindow(1, {
+				content: '
+						<div class="window-screen" style="padding: 0 1cqi;">
+						    <div style="width: 100%; height: 5cqb; display: flex; align-items: center; gap: 0.5cqi;">
+								<button class="button-back">
+								<svg xmlns="http://www.w3.org/2000/svg" style="width: 4cqb; height: 4cqb;" viewBox="0 0 24 24">
+								<g fill="none">
+								<path fill="#33FF33" d="M22.518 9.59H9.99l5.1-5.95a.483.483 0 0 0-.366-.795H9.24a.48.48 0 0 0-.359.16l-7.76 8.674a.48.48 0 0 0 0 .642l7.76 8.673a.48.48 0 0 0 .36.161h5.482a.481.481 0 0 0 .366-.795l-5.1-5.95h12.528a.48.48 0 0 0 .482-.483v-3.854a.48.48 0 0 0-.482-.482"/>
+								<path fill="#009900" d="M1 12c0 .118.044.233.122.32l7.76 8.674a.48.48 0 0 0 .36.16h5.482a.482.482 0 0 0 .366-.794l-5.1-5.95h12.528a.48.48 0 0 0 .482-.483V12z"/>
+								<path stroke="#003319" stroke-linecap="round" stroke-linejoin="round" d="M22.518 9.59H9.99l5.1-5.95a.483.483 0 0 0-.366-.795H9.24a.48.48 0 0 0-.359.16l-7.76 8.674a.48.48 0 0 0 0 .642l7.76 8.673a.48.48 0 0 0 .36.161h5.482a.481.481 0 0 0 .366-.795l-5.1-5.95h12.528a.48.48 0 0 0 .482-.483v-3.854a.48.48 0 0 0-.482-.482"/>
+								</g>
+								</svg>
+								</button>
+								<button class="button-front">
+								<svg xmlns="http://www.w3.org/2000/svg" style="width: 4cqb; height: 4cqb; transform: rotate(180deg);" viewBox="0 0 24 24">
+								<g fill="none">
+								<path fill="#33FF33" d="M22.518 9.59H9.99l5.1-5.95a.483.483 0 0 0-.366-.795H9.24a.48.48 0 0 0-.359.16l-7.76 8.674a.48.48 0 0 0 0 .642l7.76 8.673a.48.48 0 0 0 .36.161h5.482a.481.481 0 0 0 .366-.795l-5.1-5.95h12.528a.48.48 0 0 0 .482-.483v-3.854a.48.48 0 0 0-.482-.482"/>
+								<path fill="#009900" d="M1 12c0 .118.044.233.122.32l7.76 8.674a.48.48 0 0 0 .36.16h5.482a.482.482 0 0 0 .366-.794l-5.1-5.95h12.528a.48.48 0 0 0 .482-.483V12z"/>
+								<path stroke="#003319" stroke-linecap="round" stroke-linejoin="round" d="M22.518 9.59H9.99l5.1-5.95a.483.483 0 0 0-.366-.795H9.24a.48.48 0 0 0-.359.16l-7.76 8.674a.48.48 0 0 0 0 .642l7.76 8.673a.48.48 0 0 0 .36.161h5.482a.481.481 0 0 0 .366-.795l-5.1-5.95h12.528a.48.48 0 0 0 .482-.483v-3.854a.48.48 0 0 0-.482-.482"/>
+								</g>
+								</svg>
+								</button>
+								<input class="url-input" style="height: 4cqb; font-size: 2cqb; flex: 1;" type="text">
+								<button class="internet-submit">
+								<svg xmlns="http://www.w3.org/2000/svg" style="width: 4cqb; height: 4cqb;" viewBox="0 0 24 24">
+								<path fill="currentColor" d="M19 6a1 1 0 0 0-1 1v4a1 1 0 0 1-1 1H7.41l1.3-1.29a1 1 0 0 0-1.42-1.42l-3 3a1 1 0 0 0-.21.33a1 1 0 0 0 0 .76a1 1 0 0 0 .21.33l3 3a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.42L7.41 14H17a3 3 0 0 0 3-3V7a1 1 0 0 0-1-1"/>
+								</svg>
+								</button>
+							</div>
+							<div class="internet-body"></div>
+						</div>',
+			});
+			final body = cast(SCREEN.querySelector(".internet-body"), DivElement);
+			SCREEN.querySelector(".internet-submit").addEventListener("click", () -> {
+				final url = cast(SCREEN.querySelector(".url-input"), InputElement).value;
+				if (url == "") {
+					body.innerHTML = getLangValue("internet_empty");
+				} else {}
+			});
+			body.innerHTML = getLangValue("internet_empty");
+		});
+		RecycleButton.addEventListener("dblclick", () -> {
 			createWindow(2, {
 				content: '
 				<div class="window-screen" style="align-items: center; justify-content: center;">
@@ -211,8 +283,55 @@ class Start implements IJSAsync {
 				</div>
 				'
 			});
-		}));
-		WeChatButton.addEventListener("dblclick", jsasync(() -> {}));
+		});
+		WeChatButton.addEventListener("dblclick", () -> {
+			createWindow(3, {
+				content: '
+				<div class="window-screen" style="flex-direction: row;">
+					<div class="wechat-screen"></div>
+				</div>
+				'
+			});
+			final d = cast(document.createElement("div"), DivElement);
+			d.classList.add("window-screen");
+			d.style.width = "30%";
+			d.style.backgroundColor = "rgb(0, 87, 55)";
+			for (recordi in 0...WECHAT_RECORD.length) {
+				final record = WECHAT_RECORD[recordi];
+				final button = cast(document.createElement("button"), ButtonElement);
+				button.classList.add("wechat-contact");
+				button.innerText = record.avatar + " " + record.name;
+				button.addEventListener("click", () -> {
+					final wc = cast(SCREEN.querySelector(".wechat-screen"), DivElement);
+					current_wechat = recordi;
+					wc.innerHTML = "";
+					for (r in record.record) {
+						final div = cast(document.createElement("div"), DivElement);
+						div.classList.add("wechat-record");
+						if (r.name == "you") {
+							div.style.alignItems = "flex-end";
+							div.innerHTML = '
+							<div style="font-size: 1.5cqb;">${getLangValue("contact_me")}</div>
+							<div style="padding: 0.5cqb 0.3cqi; border: 0.1cqb solid #009900; background-color: #00FF00; width: auto; height: auto; font-size: 1cqi; display: flex; align-items: center; justify-content: flex-end;">
+							    ${r.content}
+							</div>
+							';
+						} else {
+							div.style.alignItems = "flex-start";
+							div.innerHTML = '
+							<div style="font-size: 1.5cqb;">${r.name}</div>
+							<div style="padding: 0.5cqb 0.3cqi; border: 0.1cqb solid #666666; background-color: #CCCCCC; width: auto; height: auto; font-size: 1cqi; display: flex; align-items: center; justify-content: flex-start;">
+							    ${r.content}
+							</div>
+							';
+						}
+						wc.innerHTML += div.outerHTML;
+					}
+				});
+				d.appendChild(button);
+			}
+			SCREEN.querySelector(".wechat-screen").insertAdjacentElement("beforebegin", d);
+		});
 		SettingsButton.addEventListener("dblclick", () -> {
 			createWindow(4, {
 				content: '
@@ -265,16 +384,67 @@ class Start implements IJSAsync {
 		xppoweron.volume = (Std.parseFloat(window.localStorage.getItem("the_farmer_helplessness_volume") ?? "100.0") ?? 100.0) / 100;
 		xppoweron.play();
 		jsawait(sleep(9000));
-		showToast('${getLangValue("wechat_helper_call_1")}');
+		showWechatToast(getLangValue("contact_manager_horse"), getLangValue("wechat_helper_call_1"));
 		jsawait(sleep(3600));
-		showToast('${getLangValue("wechat_helper_call_2")}');
+		showWechatToast(getLangValue("contact_manager_horse"), getLangValue("wechat_helper_call_2"));
 		jsawait(sleep(3600));
-		showToast('${getLangValue("wechat_helper_call_3")}');
+		showWechatToast(getLangValue("contact_manager_horse"), getLangValue("wechat_helper_call_3"));
 		jsawait(sleep(3600));
-		showToast('${getLangValue("wechat_helper_call_4")}');
-		jsawait(sleep(3600));
-		showToast('${getLangValue("wechat_helper_call_5")}');
+		showWechatToast(getLangValue("contact_manager_horse"), getLangValue("wechat_helper_call_4"));
 	}
 
-	static function initWechat() {}
+	@:jsasync
+	public static function showWechatToast(name:String, content:String, duration:Int = 3000) {
+		final current_wechat_m = Lambda.findIndex(WECHAT_RECORD, (w) -> w.name == name);
+		if (current_wechat_m == -1)
+			return;
+		WECHAT_RECORD[current_wechat_m].record.push({name: name, content: content});
+		if (current_wechat_m == current_wechat) {
+			final win = Lambda.find(State.windows, (w) -> w.app == "wechat");
+			if (win != null) {
+				final wc = cast(win.el.querySelector(".wechat-screen"), DivElement);
+				final div = cast(document.createElement("div"), DivElement);
+				div.classList.add("wechat-record");
+				if (name == "you") {
+					div.style.alignItems = "flex-end";
+					div.innerHTML = '
+    				<div style="font-size: 1.5cqb;">${getLangValue("contact_me")}</div>
+    				<div style="padding: 0.5cqb 0.3cqi; border: 0.1cqb solid #009900; background-color: #00FF00; width: auto; height: auto; font-size: 1cqi; display: flex; align-items: center; justify-content: flex-end;">
+    				    ${content}
+    				</div>
+    				';
+				} else {
+					div.style.alignItems = "flex-start";
+					div.innerHTML = '
+				<div style="font-size: 1.5cqb;">${name}</div>
+				<div style="padding: 0.5cqb 0.3cqi; border: 0.1cqb solid #666666; background-color: #CCCCCC; width: auto; height: auto; font-size: 1cqi; display: flex; align-items: center; justify-content: flex-start;">
+				    ${content}
+				</div>
+				';
+				}
+				wc.appendChild(div);
+				return;
+			}
+		} else {
+			final toast = cast(document.createElement("div"), DivElement);
+			toast.innerHTML = '
+            <img src="assets/images/icons/wechat.png" style="width: 1.5cqi; height: 1.5cqi; margin-right: 0.3cqi;">
+            ${name == "you" ? getLangValue("contact_me") : name}: <br>${content}
+            ';
+			toast.classList.add("toast");
+			toast.style.opacity = "0";
+			toast.style.transform = "translateY(20%)";
+			ROOT.appendChild(toast);
+			jsawait(sleep(100));
+			toast.style.opacity = "1";
+			toast.style.transform = "translateY(0)";
+			window.setTimeout(() -> {
+				toast.style.opacity = "0";
+				toast.style.transform = "translateY(20%)";
+				window.setTimeout(() -> {
+					toast.remove();
+				}, 300);
+			}, duration);
+		}
+	}
 }

@@ -64,35 +64,40 @@ class Util implements IJSAsync {
 		"wechat" => ["WeChat", "微信", "微信",],
 		"settings" => ["Settings", "设置", "設定",],
 		"settings_volume" => ["Game Volume: ${text}", "游戏音量：${text}", "遊戲音量：${text}",],
-		"settings_fullscreen" => ["Is fullscreen", "是否全屏", "是否全螢幕",],
+		"settings_fullscreen" => ["Is fullscreen", "全屏模式", "全螢幕模式",], // ← 简繁都改了，更符合开关/选项习惯
 		"settings_language" => ["Language", "语言", "語言",],
 		"hint_restart_game" => ["Please restart game to apply settings!", "请重启游戏以应用设置修改！", "請重新啟動遊戲以套用設定！"],
 		"recycle_is_empty" => ["Recycle Bin is empty", "回收站为空", "資源回收筒是空的"],
+		"contact_me" => ["Me", "我", "我"],
 		"contact_manager_horse" => ["Manager Horse", "马经理", "馬經理"],
 		"contact_wife" => ["My dear wife", "我亲爱的老婆", "老婆大人"],
 		"cp_c_backup" => ["Backup", "备份", "備份"],
+		"cp_c_backup_horse_crazy" => ["Surveillance.mp4", "监控视频.mp4", "監控錄像.mp4"],
 		"cp_d_video" => ["Video", "视频", "影片"],
 		"cp_d_document" => ["Document", "文档", "文檔"],
-		"file_or_folder_cannot_open" => ["The file cannot be opened", "文件无法打开", "無法開啟此文檔"],
-		"file_or_folder_need_password" => ["The file need a password, please enter:", "文件需要密码，请输入：", "此文檔需要密碼，請輸入："],
+		"cp_d_picture" => ["Picture", "图片", "圖片"], // ← 改为「圖片」更通用
+		"file_or_folder_cannot_open" => ["The file cannot be opened", "此文件无法打开", "無法開啟此文件"], // ← 简繁统一为“此文件”
+		"file_or_folder_need_password" => ["The file requires a password. Please enter it:", "此文件需要密码，请输入：", "此文件需要密碼，請輸入："], // ← 英文语法修正，繁中同步
 		"file_or_folder_incorrect_password" => ["Incorrect password!", "密码错误！", "密碼錯誤！"],
-		"wechat_helper_call_1" => ["Manager Horse: <br>Help!!", "马经理: <br>救命！", "馬經理: <br>救命！",],
-		"wechat_helper_call_2" => [
-			"Manager Horse: <br>These horses are crazy!",
-			"马经理：<br>这些马疯了！",
-			"馬經理：<br>這些馬瘋了！",
+		"internet_empty" => [
+			'<h1>Prompt Browser</h1>
+			<p>If you enter some words in the website bar, you will receive corresponding prompts!</p>
+			<p>By the way, this is only a hint for the game, even if you never open the browser, you can continue playing!</p>',
+			'<h1>提示浏览器</h1>
+			<p>如果你在网址栏输入一些词语，你会得到一些提示！</p>
+			<p>顺便提一嘴，这个仅作为游戏的提示，如果你从不打开浏览器，也是可以顺利游玩游戏的！</p>',
+			'<h1>提示瀏覽器</h1>
+			<p>如果你在網址欄輸入一些詞語，你會得到相應的提示！</p>
+			<p>順帶一提，這僅作為遊戲的提示，即使你從不打開瀏覽器，也能順利遊玩！</p>',
 		],
-		"wechat_helper_call_3" => [
-			"Manager Horse: <br>You must check the surveillance!",
-			"马经理：<br>你一定要看一下监控！",
-			"馬經理：<br>你一定要看一下監控！",
-		],
+		"wechat_helper_call_1" => ["Help!!", "救命！", "救命！",],
+		"wechat_helper_call_2" => ["These horses are crazy!", "这些马疯了！", "這些馬瘋了！",],
+		"wechat_helper_call_3" => ["You must check the surveillance!", "你一定要看一下监控！", "你一定要看一下監控！",],
 		"wechat_helper_call_4" => [
-			"Manager Horse: <br>The surveillance I sent you!",
-			"马经理：<br>监控我发给你了！",
-			"馬經理：<br>監控我發給你了！",
+			"The surveillance is saved in your computer's C:\\Backup\\Surveillance.mp4, remember to check it!",
+			"监控存在你电脑上的 C:\\Backup\\监控视频.mp4，记得看！",
+			"監控錄像已儲存於你電腦的 C:\\Backup\\監控錄像.mp4，記得查看！", // ← 已补
 		],
-		"wechat_helper_call_5" => ["Manager Horse: <br>[Video]", "马经理：<br>[视频]", "馬經理：<br>[影片]",]
 	];
 	public static final ROOT = cast(document.getElementById("main_box"), DivElement);
 	public static final MENU_BAR = cast(document.createElement("div"), DivElement);
@@ -111,36 +116,13 @@ class Util implements IJSAsync {
 		return LANGUAGE[name][index];
 	}
 
-	static var State:WindowState = {
+	public static var State:WindowState = {
 		windows: [],
 		nextId: 0,
 		activeId: 0,
 		maxZIndex: 10,
 		isDragging: null,
 	};
-
-	@:jsasync
-	public static function showToast(message:String, duration:Int = 3000) {
-		final toast = cast(document.createElement("div"), DivElement);
-		toast.innerHTML = '
-        <img src="assets/images/icons/wechat.png" style="width: 1.5cqi; height: 1.5cqi; margin-right: 0.3cqi;">
-        ${message}
-        ';
-		toast.classList.add("toast");
-		toast.style.opacity = "0";
-		toast.style.transform = "translateY(20%)";
-		ROOT.appendChild(toast);
-		jsawait(sleep(100));
-		toast.style.opacity = "1";
-		toast.style.transform = "translateY(0)";
-		window.setTimeout(() -> {
-			toast.style.opacity = "0";
-			toast.style.transform = "translateY(20%)";
-			window.setTimeout(() -> {
-				toast.remove();
-			}, 300);
-		}, duration);
-	}
 
 	public static function clamp(value:Float, min:Float, max:Float):Float {
 		return Math.max(min, Math.min(max, value));
