@@ -64,7 +64,7 @@ class Util implements IJSAsync {
 		"wechat" => ["WeChat", "微信", "微信",],
 		"settings" => ["Settings", "设置", "設定",],
 		"settings_volume" => ["Game Volume: ${text}", "游戏音量：${text}", "遊戲音量：${text}",],
-		"settings_fullscreen" => ["Is fullscreen", "全屏模式", "全螢幕模式",], // ← 简繁都改了，更符合开关/选项习惯
+		"settings_fullscreen" => ["Is fullscreen", "全屏模式", "全螢幕模式",],
 		"settings_language" => ["Language", "语言", "語言",],
 		"hint_restart_game" => ["Please restart game to apply settings!", "请重启游戏以应用设置修改！", "請重新啟動遊戲以套用設定！"],
 		"recycle_is_empty" => ["Recycle Bin is empty", "回收站为空", "資源回收筒是空的"],
@@ -75,8 +75,8 @@ class Util implements IJSAsync {
 		"cp_c_backup_horse_crazy" => ["Surveillance.mp4", "监控视频.mp4", "監控錄像.mp4"],
 		"cp_d_video" => ["Video", "视频", "影片"],
 		"cp_d_document" => ["Document", "文档", "文檔"],
-		"cp_d_picture" => ["Picture", "图片", "圖片"], // ← 改为「圖片」更通用
-		"file_or_folder_cannot_open" => ["The file cannot be opened", "此文件无法打开", "無法開啟此文件"], // ← 简繁统一为“此文件”
+		"cp_d_picture" => ["Picture", "图片", "圖片"],
+		"file_or_folder_cannot_open" => ["The file cannot be opened", "此文件无法打开", "無法開啟此文件"],
 		"file_or_folder_need_password" => ["The file requires a password. Please enter it:", "此文件需要密码，请输入：", "此文件需要密碼，請輸入："], // ← 英文语法修正，繁中同步
 		"file_or_folder_incorrect_password" => ["Incorrect password!", "密码错误！", "密碼錯誤！"],
 		"internet_empty" => [
@@ -96,7 +96,18 @@ class Util implements IJSAsync {
 		"wechat_helper_call_4" => [
 			"The surveillance is saved in your computer's C:\\Backup\\Surveillance.mp4, remember to check it!",
 			"监控存在你电脑上的 C:\\Backup\\监控视频.mp4，记得看！",
-			"監控錄像已儲存於你電腦的 C:\\Backup\\監控錄像.mp4，記得查看！", // ← 已补
+			"監控錄像已儲存於你電腦的 C:\\Backup\\監控錄像.mp4，記得查看！",
+		],
+		"wechat_helper_call_5" => ["Ok, I checked it soon, what happen?", "好，我刚检查了，发生了什么？", "好，我剛檢查了，發生了什麼？",],
+		"wechat_helper_call_6" => [
+			"I dont know, hmm, maybe the answer is on your computer..",
+			"我不知道，唔，也许答案在你电脑上！",
+			"我不知道，唔，也許答案在你電腦上！",
+		],
+		"wechat_helper_call_7" => [
+			"Please wait a moment, I can handle this trouble!",
+			"请等一会，我能搞定这个麻烦！",
+			"請等一會，我能搞定這個麻煩！",
 		],
 	];
 	public static final ROOT = cast(document.getElementById("main_box"), DivElement);

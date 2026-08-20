@@ -10,6 +10,7 @@ using StringTools;
 
 typedef RECORD_TYPE = {
 	name:String,
+	send_back:Bool,
 	content:String,
 }
 
@@ -308,7 +309,7 @@ class Start implements IJSAsync {
 					for (r in record.record) {
 						final div = cast(document.createElement("div"), DivElement);
 						div.classList.add("wechat-record");
-						if (r.name == "you") {
+						if (r.send_back) {
 							div.style.alignItems = "flex-end";
 							div.innerHTML = '
 							<div style="font-size: 1.5cqb;">${getLangValue("contact_me")}</div>
@@ -384,28 +385,34 @@ class Start implements IJSAsync {
 		xppoweron.volume = (Std.parseFloat(window.localStorage.getItem("the_farmer_helplessness_volume") ?? "100.0") ?? 100.0) / 100;
 		xppoweron.play();
 		jsawait(sleep(9000));
-		showWechatToast(getLangValue("contact_manager_horse"), getLangValue("wechat_helper_call_1"));
+		showWechatToast(getLangValue("contact_manager_horse"), false, getLangValue("wechat_helper_call_1"));
 		jsawait(sleep(3600));
-		showWechatToast(getLangValue("contact_manager_horse"), getLangValue("wechat_helper_call_2"));
+		showWechatToast(getLangValue("contact_manager_horse"), false, getLangValue("wechat_helper_call_2"));
 		jsawait(sleep(3600));
-		showWechatToast(getLangValue("contact_manager_horse"), getLangValue("wechat_helper_call_3"));
+		showWechatToast(getLangValue("contact_manager_horse"), false, getLangValue("wechat_helper_call_3"));
 		jsawait(sleep(3600));
-		showWechatToast(getLangValue("contact_manager_horse"), getLangValue("wechat_helper_call_4"));
+		showWechatToast(getLangValue("contact_manager_horse"), false, getLangValue("wechat_helper_call_4"));
+		jsawait(sleep(9600));
+		showWechatToast(getLangValue("contact_manager_horse"), true, getLangValue("wechat_helper_call_5"));
+		jsawait(sleep(3600));
+		showWechatToast(getLangValue("contact_manager_horse"), false, getLangValue("wechat_helper_call_6"));
+		jsawait(sleep(3600));
+		showWechatToast(getLangValue("contact_manager_horse"), false, getLangValue("wechat_helper_call_7"));
 	}
 
 	@:jsasync
-	public static function showWechatToast(name:String, content:String, duration:Int = 3000) {
+	public static function showWechatToast(name:String, send_back:Bool, content:String, duration:Int = 3000) {
 		final current_wechat_m = Lambda.findIndex(WECHAT_RECORD, (w) -> w.name == name);
 		if (current_wechat_m == -1)
 			return;
-		WECHAT_RECORD[current_wechat_m].record.push({name: name, content: content});
+		WECHAT_RECORD[current_wechat_m].record.push({name: name, send_back: send_back, content: content});
 		if (current_wechat_m == current_wechat) {
 			final win = Lambda.find(State.windows, (w) -> w.app == "wechat");
 			if (win != null) {
 				final wc = cast(win.el.querySelector(".wechat-screen"), DivElement);
 				final div = cast(document.createElement("div"), DivElement);
 				div.classList.add("wechat-record");
-				if (name == "you") {
+				if (send_back) {
 					div.style.alignItems = "flex-end";
 					div.innerHTML = '
     				<div style="font-size: 1.5cqb;">${getLangValue("contact_me")}</div>

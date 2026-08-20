@@ -16,6 +16,7 @@ body {
     -ms-user-select: none;
     -webkit-user-select: none;
     box-sizing: border-box;
+    min-height: 0;
 }
 #main {
     position: fixed;
