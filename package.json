@@ -6,7 +6,7 @@
     },
     "private": true,
     "scripts": {
-        "haxe": "cd src && haxe build.hxml; cd ..",
+        "haxe": "cd src && haxe build.hxml && cd ..",
         "tauri": "tauri"
     },
     "type": "module"
