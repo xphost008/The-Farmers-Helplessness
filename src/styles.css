@@ -59,6 +59,13 @@ button:active {
     right: 0;
     margin: auto;
 }
+.center-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
 .fullscreen-image {
     position: absolute;
     top: 0;
@@ -222,7 +229,7 @@ button:active {
 .taskbar-item {
     border-radius: 0.05cqi;
     background-color: rgb(57, 127, 241);
-    width: 10cqi;
+    min-width: 10cqi;
     height: 4cqb;
     padding: 0 0.1cqi;
     display: flex;
@@ -281,7 +288,7 @@ button:active {
     overflow-y: auto;
 }
 .wechat-record {
-    height: 6cqb;
+    height: auto;
     width: calc(100% - 2cqi);
     display: flex;
     flex-direction: column;

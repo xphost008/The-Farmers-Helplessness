@@ -7,7 +7,7 @@ import js.html.*;
 
 class Main implements IJSAsync {
 	static function main() {
-		Main.run();
+		run();
 	}
 
 	@:jsasync
@@ -43,19 +43,21 @@ class Main implements IJSAsync {
 		button.style.animation = "scalebig 3s ease infinite";
 		button.innerText = getLangValue("click_me");
 		var is_click = false;
-		button.addEventListener("click", jsasync(() -> {
+		button.addEventListener("click", () -> {
 			if (is_click)
 				return null;
 			is_click = true;
 			button.style.animation = "";
-			jsawait(sleep(100));
-			button.style.transform = "scale(5)";
-			jsawait(sleep(2000));
-			button.style.opacity = "0";
-			jsawait(sleep(2000));
-			jsawait(Start.run());
-		}));
+			sleep(100).then((_) -> {
+				button.style.transform = "scale(5)";
+				return sleep(2000);
+			}).then((_) -> {
+				button.style.opacity = "0";
+				return sleep(2000);
+			}).then((_) -> {
+				Start.run();
+			});
+		});
 		ROOT.appendChild(button);
-		// Start.run();
 	}
 }

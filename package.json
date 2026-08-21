@@ -1,13 +1,13 @@
 {
-  "name": "farmers-helplessness",
-  "version": "0.1.0",
-  "devDependencies": {
-    "@tauri-apps/cli": "^2"
-  },
-  "private": true,
-  "scripts": {
-    "haxe": "cd src && haxe build.hxml && cd ..",
-    "tauri": "tauri"
-  },
-  "type": "module"
+    "name": "farmers-helplessness",
+    "version": "0.1.0",
+    "devDependencies": {
+        "@tauri-apps/cli": "^2"
+    },
+    "private": true,
+    "scripts": {
+        "haxe": "cd src && haxe build.hxml; cd ..",
+        "tauri": "tauri"
+    },
+    "type": "module"
 }
